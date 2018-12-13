@@ -1,0 +1,14 @@
+#!/bin/bash 
+#chkconfig:2345 20 90 
+#description:zookeeper 
+#processname:zookeeper
+ZOOKEEPER_HOME="/solr_cloud/zookeeper"
+_ZOO_DAEMON_OUT="/logs/zookeeper.out"
+export JAVA_HOME=/usr/java/jdk1.8.0_112
+case $1 in
+        start) /solr_cloud/zookeeper/server/bin/zkServer.sh start;;
+        stop) /solr_cloud/zookeeper/server/bin/zkServer.sh stop;;
+        status) /solr_cloud/zookeeper/server/bin/zkServer.sh status;;
+        restart) /solr_cloud/zookeeper/server/bin/zkServer.sh restart;;
+        *) echo "require start|stop|status|restart";;
+esac

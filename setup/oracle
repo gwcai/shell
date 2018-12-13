@@ -1,0 +1,45 @@
+#!/bin/sh
+#chkconfig: 2345 20 80
+#description: Oracle dbstart / dbshut
+#以上两行为chkconfig所需
+ORA_HOME=/home/oracle/app/oracle/product/11.2.0/dbhome_1
+ORA_OWNER=oracle
+LOGFILE=/var/log/oracle.log
+echo "#################################" >> ${LOGFILE}
+date +"### %T %a %D: Run Oracle" >> ${LOGFILE}
+if [ ! -f ${ORA_HOME}/bin/dbstart ] || [ ! -f ${ORA_HOME}/bin/dbshut ]; then
+    echo "Error: Missing the script file ${ORA_HOME}/bin/dbstart or ${ORA_HOME}/bin/dbshut!" >> ${LOGFILE}
+    echo "#################################" >> ${LOGFILE}
+    exit
+fi
+start(){
+    echo "###Startup Database..."
+    su - ${ORA_OWNER} -c "${ORA_HOME}/bin/dbstart ${ORA_HOME}"
+    echo "###Done."
+    echo "###Run database control..."
+    su - ${ORA_OWNER} -c "${ORA_HOME}/bin/lsnrctl start"
+    echo "###Done."
+}
+stop(){
+    echo "###Stop database control..."
+    su - ${ORA_OWNER} -c "${ORA_HOME}/bin/lsnrctl stop"
+    echo "###Done."
+    echo "###Shutdown Database..."
+    su - ${ORA_OWNER} -c "${ORA_HOME}/bin/dbshut ${ORA_HOME}"
+    echo "###Done."
+}
+case "$1" in
+    'start')
+        start >> ${LOGFILE}
+    ;;
+    'stop')
+        stop >> ${LOGFILE}
+    ;;
+    'restart')
+        stop >> ${LOGFILE}
+        start >> ${LOGFILE}
+    ;;
+esac
+date +"### %T %a %D: Finished." >> ${LOGFILE}
+echo "#################################" >> ${LOGFILE}
+echo ""

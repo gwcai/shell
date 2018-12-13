@@ -1,0 +1,11 @@
+#!/bin/bash 
+#chkconfig:2345 20 90 
+#description:solr
+#processname:solr
+ZOOKEEPER_HOME="/solr_cloud/"
+case $1 in 
+        start) /etc/init.d/startSolr.sh;; 
+        stop) /etc/init.d/stopSolr.sh;; 
+        status) /etc/init.d/statusSolr.sh;;  
+        *) echo "require start|stop|status" ;; 
+esac

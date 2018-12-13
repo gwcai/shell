@@ -12,3 +12,5 @@
 ./springcloud.sh stop ##结束所有服务
 ./springcloud.sh status ##查看各个服务状态
 ```
+### 应用程序安装相关脚本 
+> 位于setup目录

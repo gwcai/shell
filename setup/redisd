@@ -1,0 +1,68 @@
+#!/bin/bash 
+# 
+# Init file for redis 
+# 
+# chkconfig: - 80 12 
+# description: redis daemon 
+# 
+# processname: redis 
+# config: /etc/redis.conf 
+# pidfile: /var/run/redis.pid 
+source /etc/init.d/functions 
+BIN="/opt/redis/bin"
+CONFIG="/opt/redis/etc/6379.conf"
+PIDFILE="/var/run/redis.pid" 
+### Read configuration 
+[ -r "$SYSCONFIG" ] && source "$SYSCONFIG" 
+RETVAL=0 
+prog="redis-server" 
+desc="Redis Server" 
+start() { 
+        if [ -e $PIDFILE ];then 
+             echo "$desc already running...." 
+             exit 1 
+        fi 
+        echo -n $"Starting $desc: " 
+        $BIN/$prog $CONFIG &
+	RETVAL=$?
+	if [ $RETVAL -eq 0 ] ;then
+        echo -e "                                    [  \033[32mOK\033[0m  ]"
+       		touch /var/lock/subsys/$prog 
+	fi
+        return $RETVAL 
+} 
+stop() { 
+        echo -n $"Stop $desc: " 
+        killproc $prog 
+        RETVAL=$? 
+        echo 
+        [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/$prog $PIDFILE 
+        return $RETVAL 
+} 
+restart() { 
+        stop 
+        start 
+} 
+case "$1" in 
+  start) 
+        start 
+        ;; 
+  stop) 
+        stop 
+        ;; 
+  restart) 
+        restart 
+        ;; 
+  condrestart) 
+        [ -e /var/lock/subsys/$prog ] && restart 
+        RETVAL=$? 
+        ;; 
+  status) 
+        status $prog 
+        RETVAL=$? 
+        ;; 
+   *) 
+        echo $"Usage: $0 {start|stop|restart|condrestart|status}" 
+        RETVAL=1 
+esac 
+exit $RETVAL
