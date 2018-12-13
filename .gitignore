@@ -1,0 +1,31 @@
+# Intellij
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+
+# Gfire
+.idea
+target
+.git
+*-local.properties
+*-local.yml
+*-test.properties
+*-test.yml
+
+# Front
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
